@@ -1,0 +1,10 @@
+Generate 5 trivia questions about the following topic.
+Repsond with JSON in the following format:
+[
+  {
+	"clue": "<Question>",
+	"question": "<Answer>"
+  }
+]
+
+Topic:  
