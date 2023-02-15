@@ -15,11 +15,11 @@ export default async function (req, res) {
     return;
   }
 
-  const animal = req.body.animal || '';
-  if (animal.trim().length === 0) {
+  const topic = req.body.topic || '';
+  if (topic.trim().length === 0) {
     res.status(400).json({
       error: {
-        message: "Please enter a valid animal",
+        message: "Please enter a valid topic",
       }
     });
     return;
@@ -28,9 +28,9 @@ export default async function (req, res) {
   try {
     const completion = await openai.createCompletion({
       model: "text-davinci-003",
-      prompt: generatePrompt(animal),
+      prompt: generatePrompt(topic),
       n: 10,
-      max_tokens: 1024,
+      max_tokens: 500,
       temperature: 0.6,
     });
     res.status(200).json({ result: completion.data.choices[0].text });
@@ -50,17 +50,19 @@ export default async function (req, res) {
   }
 }
 
-function generatePrompt(animal) {
-  const capitalizedAnimal =
-    animal[0].toUpperCase() + animal.slice(1).toLowerCase();
-  return `Generate 5 trivia questions about the following topic.
+function generatePrompt(topic) {
+  const capitalizedTopic =
+  topic[0].toUpperCase() + topic.slice(1).toLowerCase();
+  return `Generate 5 trivia questions about the topic: ${topic}
   Repsond with JSON in the following format:
-  [
-    {
-    "clue": "<Question>",
-    "question": "<Answer>"
-    }
-  ]
-  
-  Topic: ${capitalizedAnimal}`
+  {
+    "title": "<topic>"
+    "clues": 
+    [
+      {
+      "clue": "<Question>",
+      "question": "<Answer>"
+      }
+    ]
+  }`  
 }
